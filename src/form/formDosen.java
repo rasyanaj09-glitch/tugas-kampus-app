@@ -33,22 +33,22 @@ public class formDosen extends javax.swing.JDialog {
     // ================= MODEL TABLE =================
     public DefaultTableModel getModelDosen() {
         String[] judul = {
-        "NID", "Nama", "Kelamin", "Alamat"
+        "nid", "nama_dosen", "gender", "alamat_dosen"
     };
 
     DefaultTableModel model = new DefaultTableModel(null, judul);
 
     try {
-        String sql = "SELECT * FROM Dosen ORDER BY NID";
+        String sql = "SELECT * FROM Dosen ORDER BY nid";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
 
         while (rs.next()) {
-            Object[] data = new Object[7];
-            data[0] = rs.getString("NID");
-            data[1] = rs.getString("Nama");
-            data[2] = rs.getString("Kelamin");
-            data[3] = rs.getString("Alamat");
+            Object[] data = new Object[4];
+            data[0] = rs.getString("nid");
+            data[1] = rs.getString("nama_dosen");
+            data[2] = rs.getString("gender");
+            data[3] = rs.getString("alamat_dosen");
 
             model.addRow(data);
         }
@@ -93,7 +93,7 @@ public class formDosen extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Caladea", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("FORM MATA KULIAH");
+        jLabel1.setText("FORM DOSEN");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
@@ -208,13 +208,13 @@ public class formDosen extends javax.swing.JDialog {
                                     .addComponent(txtalamat))
                                 .addGap(226, 226, 226))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbgender, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(277, Short.MAX_VALUE))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtnama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbgender, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(33, 33, 33)
+                                        .addComponent(jLabel1)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
@@ -296,19 +296,25 @@ public class formDosen extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void tabledosenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledosenMouseClicked
-int row = tabledosen.getSelectedRow(); // WAJIB ADA
-
-    if(row != -1){
-
-        txtnid.setText(
-            tabledosen.getValueAt(row, 0).toString()
-        );
-
-        tampilData();
+    int baris = tabledosen.getSelectedRow();
+    
+    if (baris != -1) {
+        // 2. Ambil data dari tabel sesuai urutan kolom di getModelDosen
+        // Kolom 0: nid, 1: nama_dosen, 2: gender, 3: alamat_dosen
+        String nid    = tabledosen.getValueAt(baris, 0).toString();
+        String nama   = tabledosen.getValueAt(baris, 1).toString();
+        String gender = tabledosen.getValueAt(baris, 2).toString();
+        String alamat = tabledosen.getValueAt(baris, 3).toString();
+        
+        // 3. Masukkan ke komponen input
+        txtnid.setText(nid);
+        txtnama.setText(nama);
+        txtalamat.setText(alamat);
+        
+        // 4. Set JComboBox Kelamin
+        // trim() digunakan untuk membuang spasi (karena di model kamu ada spasi "laki ")
+        cbgender.setSelectedItem(gender);
     }
-
-tampilData();
-
     }//GEN-LAST:event_tabledosenMouseClicked
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -362,7 +368,7 @@ public void clearData(){
 public void getcode() {
    
     try {
-        String sql = "SELECT MAX(NID) FROM Dosen";
+        String sql = "SELECT MAX(nid) FROM dosen";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
 
@@ -388,19 +394,19 @@ public void getcode() {
 
     public void tampilData() {
     try {
-        String query = "SELECT * FROM Dosen WHERE NID = ?";
+        String query = "SELECT * FROM dosen WHERE nid = ?";
         ps = conDB.prepareStatement(query);
         ps.setString(1, txtnid.getText().trim());
         rs = ps.executeQuery();
 
         while (rs.next()) {
-            txtnama.setText(rs.getString("Nama"));
-            if(rs.getString("Kelamin").equals("laki")) {
-                cbgender.setSelectedItem("laki");
+            txtnama.setText(rs.getString("nama_dosen"));
+            if(rs.getString("gender").equals("l")) {
+                cbgender.setSelectedItem("l");
             }else{
-                cbgender.setSelectedItem("perempuan");
+                cbgender.setSelectedItem("p");
             }
-             txtalamat.setText(rs.getString("Alamat"));
+             txtalamat.setText(rs.getString("alamat_dosen"));
         }
             
          
@@ -415,15 +421,15 @@ public void getcode() {
 
 public void addData() {
     try {
-        String query = "INSERT INTO DOsen VALUES (?,?,?,?)";
+        String query = "INSERT INTO dosen VALUES (?,?,?,?)";
         ps = conDB.prepareStatement(query);
 
         ps.setString(1, txtnid.getText());
         ps.setString(2, txtnama.getText());
          String gender;
-         if(cbgender.getSelectedItem().equals("laki")){
-    gender = "laki";}
-         else{ gender = "perempuan";}
+         if(cbgender.getSelectedItem().equals("l")){
+    gender = "l";}
+         else{ gender = "p";}
          ps.setString(3, gender);
         ps.setString(4, txtalamat.getText());
 
@@ -442,7 +448,7 @@ public void addData() {
     public void deleteData() {
     try {
         String query =
-            "DELETE FROM Dosen WHERE NID = ?";
+            "DELETE FROM dosen WHERE nid = ?";
 
         ps = conDB.prepareStatement(query);
         ps.setString(1, txtnid.getText());
@@ -467,34 +473,50 @@ public void addData() {
 
 public void updateData() {
     try {
-        String query = 
-            "update Dosen SET Nama=?, Kelamin=?, Alamat=? WHERE NID=?";
-
-
+        // Urutan tanda tanya: 1:nama, 2:gender, 3:alamat, 4:nid
+        String query = "UPDATE dosen SET nama_dosen=?, gender=?, alamat_dosen=? WHERE nid=?";
         ps = conDB.prepareStatement(query);
 
-       ps.setString(1, txtnama.getText());
-       String gender =
-        cbgender.getSelectedItem().toString().toLowerCase().trim();
-        ps.setString(2, gender);
-        ps.setString(3, txtalamat.getText());
-        ps.setString(4, txtnid.getText());
+        // 1. Nama Dosen (? pertama)
+        ps.setString(1, txtnama.getText().trim());
+
+        // 2. LOGIKA GENDER (? kedua) - Mengubah pilihan ke L atau P
+        String pilihan = cbgender.getSelectedItem().toString().toLowerCase().trim();
+        String genderDB = "";
+        
+        // Cek apakah pilihan mengandung kata "laki" (meskipun ada spasi "laki ")
+        if (pilihan.contains("laki")) {
+            genderDB = "L";
+        } else if (pilihan.contains("perempuan")) {
+            genderDB = "P";
+        }
+        
+        ps.setString(2, genderDB); // KIRIM INI KE DATABASE
+
+        // 3. Alamat Dosen (? ketiga)
+        ps.setString(3, txtalamat.getText().trim());
+
+        // 4. NID (? keempat - Kunci WHERE)
+        ps.setString(4, txtnid.getText().trim());
 
         int hasil = ps.executeUpdate();
 
         if (hasil > 0) {
-            JOptionPane.showMessageDialog(null, "Update data sukses");
-            tabledosen.setModel(getModelDosen()); // refresh tabel
-            clearData();
+            JOptionPane.showMessageDialog(null, "Update Berhasil!  ");
+            tabledosen.setModel(getModelDosen()); // Refresh tabel
+            // clearData(); 
         } else {
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
+            JOptionPane.showMessageDialog(null, "Update gagal: NID tidak ditemukan.");
         }
 
     } catch (SQLException e) {
-        System.out.println("Error update data: " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "Update data gagal");
+        System.out.println("Error Update: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
     }
 }
+
+
+
 
 
 

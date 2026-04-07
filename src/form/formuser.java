@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class FormMatkul extends javax.swing.JDialog {
+public class formuser extends javax.swing.JDialog {
 
     private Connection conDB;
     private PreparedStatement ps;
@@ -25,35 +25,35 @@ public class FormMatkul extends javax.swing.JDialog {
 
    
 
-    public FormMatkul(java.awt.Frame parent, boolean modal) {
+    public formuser(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         conDB = KelasKoneksi.konDB(); // KONEKSI DB
     }
 
     // ================= MODEL TABLE =================
-    public DefaultTableModel getModelMatakuliah() {
+    public DefaultTableModel getModelUser() {
         String[] judul = {
-        "kdMatkul", "namaMatkul", "sks"
+        "username", "password","level"
     };
 
     DefaultTableModel model = new DefaultTableModel(null, judul);
 
     try {
-        String sql = "SELECT * FROM matakuliah ORDER BY kdMatkul";
+        String sql = "SELECT * FROM user ORDER BY username, password";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
 
         while (rs.next()) {
-            Object[] data = new Object[7];
-            data[0] = rs.getString("kdMatkul");
-            data[1] = rs.getString("namaMatkul");
-            data[2] = rs.getString("sks");
+            Object[] data = new Object[3];
+            data[0] = rs.getString("username");
+            data[1] = rs.getString("password");
+     data[2] = rs.getString("level");
 
             model.addRow(data);
         }
     } catch (SQLException e) {
-        System.out.println("Model matkul Error: " + e.getMessage());
+        System.out.println("Model bobot Error: " + e.getMessage());
     }
     return model;
 }
@@ -66,18 +66,17 @@ public class FormMatkul extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtnim = new javax.swing.JTextField();
         txtnama = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablemhs = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
-        txttempatlahir = new javax.swing.JTextField();
         ADD = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtnim1 = new javax.swing.JTextField();
+        cb1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -91,21 +90,15 @@ public class FormMatkul extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Caladea", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("FORM MATAKULIAH");
+        jLabel1.setText("FORM USER");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel2.setText("Kode matkul");
+        jLabel2.setText("Username");
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel3.setText("Nama Matkul");
-
-        txtnim.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnimActionPerformed(evt);
-            }
-        });
+        jLabel3.setText("Pw");
 
         tablemhs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -124,10 +117,6 @@ public class FormMatkul extends javax.swing.JDialog {
             }
         });
         jScrollPane1.setViewportView(tablemhs);
-
-        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel4.setText("Sks");
 
         ADD.setText("ADD");
         ADD.addActionListener(new java.awt.event.ActionListener() {
@@ -164,12 +153,17 @@ public class FormMatkul extends javax.swing.JDialog {
             }
         });
 
-        jButton5.setText("GetCode");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel4.setText("Level");
+
+        txtnim1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                txtnim1ActionPerformed(evt);
             }
         });
+
+        cb1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "admin", "dosen", "mahasiswa" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -178,24 +172,6 @@ public class FormMatkul extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addGap(52, 52, 52)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtnim, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton5)
-                                .addGap(226, 226, 226))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtnama, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txttempatlahir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
@@ -210,30 +186,42 @@ public class FormMatkul extends javax.swing.JDialog {
                                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(36, 36, 36))))))
+                                .addGap(36, 36, 36))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
+                        .addGap(52, 52, 52)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cb1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtnim1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(93, 93, 93)
+                                .addComponent(jLabel1)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtnim)
-                        .addComponent(jButton5))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(84, 84, 84)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtnim1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(txtnama, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(txttempatlahir, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
                         .addComponent(ADD)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1)
@@ -245,7 +233,11 @@ public class FormMatkul extends javax.swing.JDialog {
                         .addComponent(jButton4)
                         .addGap(138, 138, 138))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(cb1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(84, 84, 84)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(71, Short.MAX_VALUE))))
         );
@@ -268,17 +260,12 @@ public class FormMatkul extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-     tablemhs.setModel(getModelMatakuliah());
-     txtnim.setEditable(false);
+     tablemhs.setModel(getModelUser());
+     cb1.setEditable(false);
     }//GEN-LAST:event_formWindowOpened
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        getcode();
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-System.exit(0);       // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -286,9 +273,7 @@ System.exit(0);       // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
- txtnim.setText("");          // Kode Matkul masuk ke txtnim
-        txtnama.setText("");         // Nama Matkul masuk ke txtnama
-        txttempatlahir.setText("");        // TODO add your handling code here:
+  clearData();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -296,52 +281,42 @@ System.exit(0);       // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void ADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDActionPerformed
-        if(txtnim.getText().trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "KOde matkul wajib di isi");
-
-        }else {
-            addData(); // panggil method insert
-        }// TODO add your handling code here:
+addData();       
     }//GEN-LAST:event_ADDActionPerformed
 
     private void tablemhsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablemhsMouseClicked
-                                     
-    // 1. Ambil baris yang diklik
-    int baris = tablemhs.getSelectedRow();
+       int baris = tablemhs.getSelectedRow();
     
-    // 2. Pastikan baris yang diklik valid
     if (baris != -1) {
-        // 3. Ambil data dari tabel berdasarkan kolomnya
-        String kode = tablemhs.getValueAt(baris, 0).toString();
-        String nama = tablemhs.getValueAt(baris, 1).toString();
-        String sks  = tablemhs.getValueAt(baris, 2).toString();
+        // 2. Ambil data dari tabel sesuai kolom
+        String user = tablemhs.getValueAt(baris, 0).toString();
+        String pass = tablemhs.getValueAt(baris, 1).toString();
+        String level = tablemhs.getValueAt(baris, 2).toString();
         
-        // 4. Pindahkan ke JTextField
-        txtnim.setText(kode);          // Kode Matkul masuk ke txtnim
-        txtnama.setText(nama);         // Nama Matkul masuk ke txtnama
-        txttempatlahir.setText(sks);   // SKS masuk ke txttempatlahir
+        // 3. Masukkan ke komponen input
+        txtnim1.setText(user);   // Username masuk ke txtnim1
+        txtnama.setText(pass);   // Password masuk ke txtnama
         
-        // Opsional: Kunci primary key agar tidak bisa diubah saat update
-        txtnim.setEditable(false);
-    
-}
-
+        // 4. Set JComboBox sesuai data level di tabel
+        cb1.setSelectedItem(level);
+    }
     }//GEN-LAST:event_tablemhsMouseClicked
 
-    private void txtnimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnimActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtnimActionPerformed
+    private void txtnim1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnim1ActionPerformed
+      
+    }//GEN-LAST:event_txtnim1ActionPerformed
 public void clearData(){
-    txtnim.setText("");
+    txtnim1.setText("");
     txtnama.setText("");
-    txttempatlahir.setText(""); 
+     cb1.setSelectedIndex(0);
+
     
 }
 
 public void getcode() {
    
     try {
-        String sql = "SELECT MAX(kdMatkul) FROM matakuliah";
+        String sql = "SELECT MAX(kode_matkul) FROM bobot";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
 
@@ -355,7 +330,7 @@ public void getcode() {
         }
 
         String newKode = String.format("MK%02d", kode);
-        txtnim.setText(newKode);
+      
 
     } catch (SQLException e) {
         System.out.println("get code SQL error: " + e.getMessage());
@@ -367,19 +342,25 @@ public void getcode() {
 
     public void tampilData() {
     try {
-        String query = "SELECT * FROM matakuliah WHERE kdMatkul = ?";
+        String query = "SELECT * FROM user WHERE username = ? AND password = ?";
         ps = conDB.prepareStatement(query);
-        ps.setString(1, txtnim.getText().trim());
+
+        ps.setString(1, txtnim1.getText().trim());
+        ps.setString(2, txtnama.getText().trim());
+
         rs = ps.executeQuery();
 
-        while (rs.next()) {
-            txtnama.setText(rs.getString("namaMatkul"));
-            txttempatlahir.setText(rs.getString("sks"));
+        if (rs.next()) {
+            String level = rs.getString("level");
+
+            if (level.equals("mahasiswa")) {
+                cb1.setSelectedItem("mahasiswa");
+            } else if (level.equals("dosen")) {
+                cb1.setSelectedItem("dosen");
+            } else if (level.equals("admin")) {
+                cb1.setSelectedItem("admin");
+            }
         }
-            
-         
-            
-        
 
     } catch (SQLException e) {
         System.out.println("tampil Data error: " + e.getMessage());
@@ -389,18 +370,28 @@ public void getcode() {
 
 public void addData() {
     try {
-        String query = "INSERT INTO matakuliah VALUES (?,?,?)";
+        String query = "INSERT INTO user VALUES (?,?,?)";
         ps = conDB.prepareStatement(query);
 
-        ps.setString(1, txtnim.getText());
+        ps.setString(1, txtnim1.getText());
         ps.setString(2, txtnama.getText());
-        ps.setString(3, txttempatlahir.getText());
+     String level;
+        if (cb1.getSelectedItem().equals("mahasiswa")) {
+            level = "mahasiswa";
+        } else if (cb1.getSelectedItem().equals("dosen")) {
+            level = "dosen";
+        } else {
+            level = "admin";
+        }
+
+        ps.setString(3, level);
+        
 
         ps.executeUpdate();
 
         JOptionPane.showMessageDialog(null, "Add data sukses");
 
-        tablemhs.setModel(getModelMatakuliah()); // refresh tabel
+        tablemhs.setModel(getModelUser()); // refresh tabel
 
     } catch (SQLException e) {
         System.out.println("Error add data: " + e.getMessage());
@@ -408,19 +399,19 @@ public void addData() {
     }
 }
 
-    public void deleteData() {
+   public void deleteData() {
     try {
-        String query =
-            "DELETE FROM matakuliah WHERE kdMatkul = ?";
-
+        String query = "DELETE FROM user WHERE username = ? AND password = ?";
         ps = conDB.prepareStatement(query);
-        ps.setString(1, txtnim.getText());
+
+        ps.setString(1, txtnim1.getText().trim()); // username
+        ps.setString(2, txtnama.getText().trim()); // password
 
         int hasil = ps.executeUpdate();
 
         if (hasil > 0) {
             JOptionPane.showMessageDialog(null, "Delete data sukses");
-            tablemhs.setModel(getModelMatakuliah()); // refresh tabel
+            tablemhs.setModel(getModelUser()); // refresh tabel
             clearData();
         } else {
             JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
@@ -436,38 +427,32 @@ public void addData() {
 
 public void updateData() {
     try {
-        // Ada 3 tanda tanya (?)
-        String query = "UPDATE matakuliah SET namaMatkul=?, sks=? WHERE kdMatkul=?";
+        String query = 
+            "UPDATE user SET level = ? WHERE username = ? AND password = ?";
 
         ps = conDB.prepareStatement(query);
 
-        // Parameter 1: namaMatkul (dari txtnama)
-        ps.setString(1, txtnama.getText().trim());
-        
-        // Parameter 2: sks (dari txttempatlahir)
-        ps.setString(2, txttempatlahir.getText().trim());
-        
-        // Parameter 3: kdMatkul sebagai kunci WHERE (dari txtnim)
-        // INI YANG TADI KURANG
-        ps.setString(3, txtnim.getText().trim()); 
+        String level = cb1.getSelectedItem().toString();
+
+        ps.setString(1, level);                          // level baru
+        ps.setString(2, txtnim1.getText().trim());       // username
+        ps.setString(3, txtnama.getText().trim());       // password
 
         int hasil = ps.executeUpdate();
 
         if (hasil > 0) {
             JOptionPane.showMessageDialog(null, "Update data sukses");
-            tablemhs.setModel(getModelMatakuliah()); // Refresh tabel
-            // clearData(); // Pastikan method ini sudah dibuat
+            tablemhs.setModel(getModelUser());
+            clearData();
         } else {
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan atau Kode Matkul salah");
+            JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
         }
 
     } catch (SQLException e) {
         System.out.println("Error update data: " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "Update data gagal: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Update data gagal");
     }
 }
-
-
 
 
 
@@ -488,20 +473,23 @@ public void updateData() {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormMatkul.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(formuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormMatkul.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(formuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormMatkul.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(formuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormMatkul.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(formuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FormMatkul dialog = new FormMatkul(new javax.swing.JFrame(), true);
+                formuser dialog = new formuser(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -516,11 +504,11 @@ public void updateData() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ADD;
+    private javax.swing.JComboBox cb1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -529,8 +517,7 @@ public void updateData() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablemhs;
     private javax.swing.JTextField txtnama;
-    private javax.swing.JTextField txtnim;
-    private javax.swing.JTextField txttempatlahir;
+    private javax.swing.JTextField txtnim1;
     // End of variables declaration//GEN-END:variables
 
     private Object at(int selectedRow, int i) {
