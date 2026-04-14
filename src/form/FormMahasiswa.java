@@ -421,7 +421,7 @@ public void getcode() {
             }
         }
 
-        String newKode = String.format("MK%02d", kode);
+        String newKode = String.format("M%02d", kode);
         txtnim.setText(newKode);
 
     } catch (SQLException e) {
@@ -464,35 +464,42 @@ public void getcode() {
 
 public void addData() {
     try {
-        String query = "INSERT INTO mahasiswa VALUES (?,?,?,?,?,?,?)";
+        // Gunakan nama kolom agar lebih aman
+        String query = "INSERT INTO mahasiswa (nim, nama_mhs, gender, tmpLahir, tglLahir, noHP, alamat) VALUES (?,?,?,?,?,?,?)";
         ps = conDB.prepareStatement(query);
 
-        ps.setString(1, txtnim.getText());
-        ps.setString(2, txtnama.getText());
-        ps.setString(3, txttempatlahir.getText());
-         String gender;
-         if(cbgender.getSelectedItem().equals("L")){
-    gender = "L";}
-         else{ gender = "P";}
-         ps.setString(4, gender);
-    
-     String tanggal = sdf.format(date.getDate());
-ps.setString(5, tanggal);
+        ps.setString(1, txtnim.getText()); // nim
+        ps.setString(2, txtnama.getText()); // nama_mhs
+        
+        // GENDER (Urutan ke-3 sesuai database)
+        String gender = cbgender.getSelectedItem().toString().equals("L") ? "L" : "P";
+        ps.setString(3, gender);
+        
+        // TEMPAT LAHIR (Urutan ke-4 sesuai database)
+        ps.setString(4, txttempatlahir.getText());
 
-        ps.setString(6,txtno.getText());
+        // TANGGAL LAHIR (Urutan ke-5)
+        String tanggal = sdf.format(date.getDate());
+        ps.setString(5, tanggal);
+
+        // NO HP (Urutan ke-6)
+        ps.setString(6, txtno.getText());
+
+        // ALAMAT (Urutan ke-7)
         ps.setString(7, txtalamat.getText());
 
         ps.executeUpdate();
-
         JOptionPane.showMessageDialog(null, "Add data sukses");
-
-        tablemhs.setModel(getModelMahasiswa()); // refresh tabel
+        tablemhs.setModel(getModelMahasiswa());
 
     } catch (SQLException e) {
         System.out.println("Error add data: " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "Add data gagal");
+        JOptionPane.showMessageDialog(null, "Add data gagal: " + e.getMessage());
+    } catch (NullPointerException e) {
+        JOptionPane.showMessageDialog(null, "Tanggal lahir belum diisi!");
     }
 }
+
 
     public void deleteData() {
     try {
@@ -522,38 +529,43 @@ ps.setString(5, tanggal);
 
 public void updateData() {
     try {
-        String query = 
-            "update mahasiswa SET nama=?, tmpLahir=?, Kelamin=?, tglLahir=?, noHP=?, alamat=? WHERE nim=?";
-
+        // Pastikan nama kolom sesuai: nama_mhs, gender, tmpLahir, tglLahir, noHP, alamat
+        String query = "UPDATE mahasiswa SET nama_mhs=?, gender=?, tmpLahir=?, tglLahir=?, noHP=?, alamat=? WHERE nim=?";
 
         ps = conDB.prepareStatement(query);
 
-       ps.setString(1, txtnama.getText());
-        ps.setString(2, txttempatlahir.getText());
-       String gender =
-        cbgender.getSelectedItem().toString().toLowerCase().trim();
-        ps.setString(3, gender);
-        String tanggal = sdf.format(date.getDate());
-        ps.setString(4, tanggal);
+        ps.setString(1, txtnama.getText());
+        
+        // Penanganan Combo Box Gender untuk ENUM L/P
+        String selectedGender = cbgender.getSelectedItem().toString();
+        String gender = selectedGender.startsWith("L") ? "L" : "P"; 
+        ps.setString(2, gender);
+        
+        ps.setString(3, txttempatlahir.getText());
+        
+        // Validasi Tanggal
+        if (date.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Pilih tanggal lahir!");
+            return;
+        }
+        ps.setString(4, sdf.format(date.getDate()));
+        
         ps.setString(5, txtno.getText());
         ps.setString(6, txtalamat.getText());
-        ps.setString(7, txtnim.getText());
+        ps.setString(7, txtnim.getText()); // Kunci pencarian data
 
         int hasil = ps.executeUpdate();
-
         if (hasil > 0) {
-            JOptionPane.showMessageDialog(null, "Update data sukses");
-            tablemhs.setModel(getModelMahasiswa()); // refresh tabel
+            JOptionPane.showMessageDialog(null, "Update Berhasil!");
+            tablemhs.setModel(getModelMahasiswa());
             clearData();
-        } else {
-            JOptionPane.showMessageDialog(null, "Data tidak ditemukan");
         }
 
     } catch (SQLException e) {
-        System.out.println("Error update data: " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "Update data gagal");
+        JOptionPane.showMessageDialog(null, "Gagal Update: " + e.getMessage());
     }
 }
+
 
 
 

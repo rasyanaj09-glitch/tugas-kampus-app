@@ -56,7 +56,7 @@ public class FormNilai extends javax.swing.JDialog {
             data[j][1] = rs.getString("nim");
             data[j][2] = rs.getString("id_mengajar");
             data[j][3] = rs.getString("tgs");
-            data[j][4] = rs.getString("uts"); // Menambahkan tanda = yang hilang
+            data[j][4] = rs.getString("uts"); 
             data[j][5] = rs.getString("uas");
             data[j][6] = rs.getString("nilaiMutu");
             j++;
@@ -146,7 +146,7 @@ public class FormNilai extends javax.swing.JDialog {
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel4.setText("Tempat Lahir");
+        jLabel4.setText("Id Mengajar");
 
         ADD.setText("ADD");
         ADD.addActionListener(new java.awt.event.ActionListener() {
@@ -217,6 +217,13 @@ public class FormNilai extends javax.swing.JDialog {
             }
         });
 
+        txtMutu.setEditable(false);
+        txtMutu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMutuActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -262,9 +269,9 @@ public class FormNilai extends javax.swing.JDialog {
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(39, 39, 39)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -356,7 +363,9 @@ public class FormNilai extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void tabelNilaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelNilaiMouseClicked
-txtId.setText(tabelModel.getValueAt(tabelNilai.getSelectedRow(), 0).toString());
+     int baris = tabelNilai.getSelectedRow();
+    String idTerpilih = tabelNilai.getValueAt(baris, 0).toString();
+    txtId.setText(idTerpilih);
     tampilData();
     }//GEN-LAST:event_tabelNilaiMouseClicked
 
@@ -394,12 +403,16 @@ clearData();        // TODO add your handling code here:
     }//GEN-LAST:event_txtUtsActionPerformed
 
     private void cbNimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNimActionPerformed
-comboNIM();        // TODO add your handling code here:
+       // TODO add your handling code here:
     }//GEN-LAST:event_cbNimActionPerformed
 
     private void cbIDAjarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbIDAjarActionPerformed
-comboIDMengajar();        // TODO add your handling code here:
+              // TODO add your handling code here:
     }//GEN-LAST:event_cbIDAjarActionPerformed
+
+    private void txtMutuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMutuActionPerformed
+setEnabled(false);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMutuActionPerformed
 
     public void comboNIM() {
     try {
@@ -421,7 +434,7 @@ comboIDMengajar();        // TODO add your handling code here:
     
     public void comboIDMengajar() {
     try {
-        String query = "SELECT * FROM dosen_mengajar ORDER BY id";
+        String query = "SELECT * FROM dosen_mengajar ORDER BY id_mengajar";
         ps = conDB.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = ps.executeQuery();
 
@@ -429,37 +442,57 @@ comboIDMengajar();        // TODO add your handling code here:
         cbIDAjar.addItem("Pilih:");
 
         while (rs.next()) {
-            cbIDAjar.addItem(rs.getString("id"));
+            cbIDAjar.addItem(rs.getString("id_mengajar"));
         }
 
     } catch (SQLException e) {
         System.out.println("combo ID Ajar error " + e.getMessage());
     }
 }
-    public void tampilData() {
+   public void tampilData() {
+    if (txtId.getText().trim().equals("")) {
+        return;
+    }
+
     try {
-        String query = "SELECT *, "
-                + "m.nama_mhs AS namaMHS FROM nilai n INNER JOIN mahasiswa m "
-                + "ON n.nim = m.nim "
-                + "WHERE idNilai = ?";
+        String query = "SELECT n.*, m.nama_mhs FROM nilai n "
+                     + "INNER JOIN mahasiswa m ON n.nim = m.nim "
+                     + "WHERE n.idNilai = ?";
         
         ps = conDB.prepareStatement(query);
-        ps.setString(1, txtId.getText());
+        ps.setString(1, txtId.getText()); 
         rs = ps.executeQuery();
 
-        while (rs.next()) {
-            cbNim.setSelectedItem(rs.getString("nim") + " - " + rs.getString("namaMHS"));
+        if (rs.next()) { 
+           
+            String nimDB = rs.getString("nim");
+            boolean ditemukan = false;
+            for (int i = 0; i < cbNim.getItemCount(); i++) {
+                if (cbNim.getItemAt(i).toString().startsWith(nimDB)) {
+                    cbNim.setSelectedIndex(i);
+                    ditemukan = true;
+                    break;
+                }
+            }
+            if (!ditemukan) {
+                cbNim.setSelectedItem(nimDB + " - " + rs.getString("nama_mhs"));
+            }
+
             cbIDAjar.setSelectedItem(rs.getString("id_mengajar"));
             txtTgs.setText(rs.getString("tgs"));
             txtUts.setText(rs.getString("uts"));
             txtUas.setText(rs.getString("uas"));
-            txtMutu.setText(rs.getString("nilaiMutu"));
+            txtMutu.setText(rs.getString("nilaiMutu")); 
+            
+        } else {
+            System.out.println("Data tidak ditemukan untuk ID: " + txtId.getText());
         }
 
     } catch (SQLException e) {
-        System.out.println("tampil data error " + e.getMessage());
+        System.out.println("tampil data error: " + e.getMessage());
     }
 }
+
     public void clearData() {
     txtId.setText("");
     cbNim.setSelectedIndex(0);
@@ -469,54 +502,95 @@ comboIDMengajar();        // TODO add your handling code here:
     txtUas.setText("");
     txtMutu.setText("");
 }
-    public void addData() {
+   public void addData() {
     try {
-        int idMengajar = Integer.parseInt(cbIDAjar.getSelectedItem().toString());
+   
+        if (txtId.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "ID Nilai tidak boleh kosong!");
+            return;
+        }
+        if (cbNim.getSelectedIndex() <= 0 || cbIDAjar.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(null, "Pilih NIM dan ID Mengajar dulu!");
+            return;
+        }
+
+
+        int idInput = Integer.parseInt(txtId.getText()); 
+        String nim = cbNim.getSelectedItem().toString().split(" ")[0]; 
+        int idAjar = Integer.parseInt(cbIDAjar.getSelectedItem().toString());
         int tgs = Integer.parseInt(txtTgs.getText());
         int uts = Integer.parseInt(txtUts.getText());
         int uas = Integer.parseInt(txtUas.getText());
 
-        //Query SQL untuk Insert ke tabel 'nilai'
-        String query = "INSERT INTO nilai VALUES (?, ?, ?, ?, ?, ?, ?)";
-
+  
+        String query = "INSERT INTO nilai (idNilai, nim, id_mengajar, tgs, uts, uas) VALUES (?, ?, ?, ?, ?, ?)";
         ps = conDB.prepareStatement(query);
-        ps.setString(1, null);
-        ps.setString(2, cbNim.getSelectedItem().toString().substring(0, 4));
-        ps.setInt(3, idMengajar);
-        ps.setDouble(4, tgs);
-        ps.setDouble(5, uts);
-        ps.setDouble(6, uas);
-        ps.setString(7, null);
+        
 
-        //Eksekusi Query
-        ps.executeUpdate();
+        ps.setInt(1, idInput);    
+        ps.setString(2, nim);     
+        ps.setInt(3, idAjar);     
+        ps.setInt(4, tgs);        
+        ps.setInt(5, uts);        
+        ps.setInt(6, uas);        
 
-        JOptionPane.showMessageDialog(null, "add data sukses");
+     
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Add data sukses : ");
+            tampilKeTabel(); 
+            tampilData(); 
+        }
 
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Input ID dan Nilai harus berupa angka!");
     } catch (SQLException e) {
-        System.out.println("add data error " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "add data gagal");
+        // Jika ID 1 sudah ada di database, akan muncul error "Duplicate Entry"
+        JOptionPane.showMessageDialog(null, "Gagal simpan: " + e.getMessage());
     }
 }
-    public void updateData() {
+
+
+  public void updateData() {
     try {
-        String query = "UPDATE nilai SET nim=?, id_mengajar=?, "
-                + "tgs=?, uts=?, uas=? WHERE idNilai=?";
+        if (txtId.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Pilih data di tabel terlebih dahulu!");
+            return;
+        }
 
+        String query = "UPDATE nilai SET nim=?, id_mengajar=?, tgs=?, uts=?, uas=? WHERE idNilai=?";
         ps = conDB.prepareStatement(query);
-        ps.setString(1, cbNim.getSelectedItem().toString().substring(0, 4));
-        ps.setString(2, cbIDAjar.getSelectedItem().toString());
-        ps.setString(3, txtTgs.getText());
-        ps.setString(4, txtUts.getText());
-        ps.setString(5, txtUas.getText());
-        ps.setString(6, txtId.getText());
-        ps.executeUpdate();
 
-        JOptionPane.showMessageDialog(null, "update data sukses");
+        String nim = cbNim.getSelectedItem().toString().split(" ")[0];
+        
+        ps.setString(1, nim);
+        ps.setInt(2, Integer.parseInt(cbIDAjar.getSelectedItem().toString()));
+        ps.setInt(3, Integer.parseInt(txtTgs.getText()));
+        ps.setInt(4, Integer.parseInt(txtUts.getText()));
+        ps.setInt(5, Integer.parseInt(txtUas.getText()));
+        ps.setInt(6, Integer.parseInt(txtId.getText()));
 
+        int rowsAffected = ps.executeUpdate();
+
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Update data sukses!");
+            
+           
+            tampilKeTabel(); 
+            
+            
+            tampilData(); 
+    
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Gagal: Data tidak ditemukan.");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Input Nilai harus berupa angka!");
     } catch (SQLException e) {
-        System.out.println("update data error " + e.getMessage());
-        JOptionPane.showMessageDialog(null, "update data gagal");
+        System.out.println("update data error: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage());
     }
 }
     public void deleteData() {
@@ -526,16 +600,58 @@ comboIDMengajar();        // TODO add your handling code here:
         
         ps = conDB.prepareStatement(query);
         ps.setString(1, txtId.getText());
-        ps.executeUpdate();
+          int rowsAffected = ps.executeUpdate();
 
-        JOptionPane.showMessageDialog(null, "delete data sukses");
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Delete data sukses!");
+            
+           
+            tampilKeTabel(); 
+            
+            
+            tampilData(); 
+    
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Gagal: Data tidak ditemukan.");
+        }
 
     } catch (SQLException e) {
         System.out.println("delete data error " + e.getMessage());
         JOptionPane.showMessageDialog(null, "delete data gagal");
     }
 }
-   
+ public void tampilKeTabel() {
+    DefaultTableModel model = (DefaultTableModel) tabelNilai.getModel();
+    model.setRowCount(0); 
+
+    try {
+        // Query Join untuk mengambil nama mahasiswa
+        String sql = "SELECT n.*, m.nama_mhs FROM nilai n "
+                   + "INNER JOIN mahasiswa m ON n.nim = m.nim ORDER BY n.idNilai DESC";
+        ps = conDB.prepareStatement(sql);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            // Gabungkan NIM dan Nama sesuai keinginan Anda
+            String nimNama = rs.getString("nim") + " - " + rs.getString("nama_mhs");
+
+            // Pastikan jumlah & urutan Object[] ini SAMA dengan jumlah kolom di desain JTable
+            Object[] row = {
+                rs.getString("idNilai"),      // Kolom 1
+                nimNama,                      // Kolom 2 (Gabungan NIM & Nama)
+                rs.getString("id_mengajar"),  // Kolom 3
+                rs.getString("tgs"),          // Kolom 4
+                rs.getString("uts"),          // Kolom 5
+                rs.getString("uas"),          // Kolom 6
+                rs.getString("nilaiMutu")     // Kolom 7 (Pasti muncul Huruf)
+            };
+            model.addRow(row);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error tampil ke tabel: " + e.getMessage());
+    }
+}
 
 
 

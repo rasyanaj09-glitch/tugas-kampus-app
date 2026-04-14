@@ -435,7 +435,9 @@ public void deleteData() {
 public void ComboNid() {
     try {
         cbNim.removeAllItems();
-        String sql = "SELECT nid FROM dosen"; // Asumsi tabel dosen ada
+        cbNim.addItem("Pilih:"); // Tambahkan baris ini
+        
+        String sql = "SELECT nid FROM dosen";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
         while (rs.next()) {
@@ -449,7 +451,9 @@ public void ComboNid() {
 public void ComboMatkul() {
     try {
         cbKdmatkul.removeAllItems();
-        String sql = "SELECT kdMatkul FROM matakuliah"; // Asumsi tabel matakuliah ada
+        cbKdmatkul.addItem("Pilih:"); // Tambahkan baris ini
+        
+        String sql = "SELECT kdMatkul FROM matakuliah";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
         while (rs.next()) {
