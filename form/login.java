@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -92,7 +94,7 @@ public class login extends javax.swing.JDialog {
         jLabel3.setForeground(new java.awt.Color(204, 204, 204));
         jLabel3.setText("Pw");
 
-        ADD.setText("ADD");
+        ADD.setText("Login");
         ADD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ADDActionPerformed(evt);
@@ -171,38 +173,31 @@ public class login extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void ADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDActionPerformed
-try {
-    // 1. Query SQL untuk mengambil data user berdasarkan input
-    String sql = "SELECT level FROM user WHERE username=? AND password=?";
-    ps = conDB.prepareStatement(sql);
-    ps.setString(1, txt1.getText());
-    ps.setString(2, txt2.getText());
-    rs = ps.executeQuery();
+                                          
+    try {
+     
+        String sql = "SELECT level FROM user WHERE username=? AND password=?";
+        ps = conDB.prepareStatement(sql);
+        ps.setString(1, txt1.getText()); 
+        ps.setString(2, txt2.getText()); 
+        rs = ps.executeQuery();
 
-    if (rs.next()) { 
-        // 2. Mengambil isi kolom 'role' dari database
-        String level = rs.getString("level"); 
-
-        // 3. Logika Percabangan Role
-        if (level.equalsIgnoreCase("admin")) {
-         Menu menu = new Menu (new javax.swing.JFrame(), true); 
-menu.setVisible(true);
-        } 
-        else if (level.equalsIgnoreCase("dosen")) {
-        menudosen dosen = new menudosen (new javax.swing.JFrame(), true); 
-dosen.setVisible(true);
-        } 
-        else if (level.equalsIgnoreCase("mahasiswa")) {
-          menumhs mhs = new menumhs(new javax.swing.JFrame(), true); 
-mhs.setVisible(true);
+        if (rs.next()) { 
+            String level = rs.getString("level"); 
+            JOptionPane.showMessageDialog(null, "Login Berhasil sebagai " + level);
+            
+           
+            Menu menuUtama = new Menu(new javax.swing.JFrame(), true, level);
+            this.dispose(); 
+            menuUtama.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Username atau Password Salah!");
         }
-        
-    } else {
-        JOptionPane.showMessageDialog(null, "Username atau Password Salah!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "System Error: " + e.getMessage());
     }
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(null, "Koneksi Error: " + e.getMessage());
-}
+
+
 
     }//GEN-LAST:event_ADDActionPerformed
 
