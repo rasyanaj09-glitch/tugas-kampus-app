@@ -23,7 +23,11 @@ public class FormBobot extends javax.swing.JDialog {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private DefaultTableModel tabelModel;
 
-   
+   public FormBobot() {
+    super(new javax.swing.JFrame(), true);
+    initComponents();
+}
+
 
     public FormBobot(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -245,7 +249,7 @@ public class FormBobot extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-System.exit(0);            // TODO add your handling code here:
+this.dispose();          // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

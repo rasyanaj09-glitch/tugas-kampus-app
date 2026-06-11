@@ -82,7 +82,6 @@ public class formdosen_mengajar extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cbKdmatkul = new javax.swing.JComboBox();
-        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -178,13 +177,6 @@ public class formdosen_mengajar extends javax.swing.JDialog {
         jLabel5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5.setText("Kd MAtkul");
 
-        jButton5.setText("getCode");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -201,10 +193,7 @@ public class formdosen_mengajar extends javax.swing.JDialog {
                         .addGap(52, 52, 52)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(69, 69, 69)
-                                    .addComponent(jButton5))
+                                .addComponent(txtId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(cbKdmatkul, javax.swing.GroupLayout.Alignment.LEADING, 0, 66, Short.MAX_VALUE)
@@ -233,9 +222,7 @@ public class formdosen_mengajar extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton5))
+                    .addComponent(txtId, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -288,7 +275,7 @@ public class formdosen_mengajar extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-System.exit(0);            // TODO add your handling code here:
+this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -341,10 +328,6 @@ addData();
     private void cbNimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNimActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbNimActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-getcode();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
 public void clearData(){
     txtId.setText("");
     cbNim.setSelectedIndex(0);
@@ -353,30 +336,35 @@ public void clearData(){
 }
 
 public void getcode() {
-   
     try {
-        String sql = "SELECT MAX(id_mengajar) FROM dosen_mengajar";
+        // Gunakan alias 'max_id' agar lebih rapi
+        String sql = "SELECT MAX(id_mengajar) AS max_id FROM dosen_mengajar";
         ps = conDB.prepareStatement(sql);
         rs = ps.executeQuery();
 
-        int kode = 1;
+        int kode = 1; // Default jika tabel kosong
 
         if (rs.next()) {
-            String lastkode_matkul = rs.getString(1);
-            if (lastkode_matkul != null) {
-                kode = Integer.parseInt(lastkode_matkul.substring(2)) + 1;
+            String lastId = rs.getString("max_id");
+            // Cek apakah data tidak null dan panjangnya cukup (minimal 3 karakter untuk MK1)
+            if (lastId != null && lastId.length() > 2) {
+                // Mengambil angka setelah "MK"
+                String angkaSaja = lastId.substring(2); 
+                kode = Integer.parseInt(angkaSaja) + 1;
             }
         }
 
+        // Format: MK + angka (minimal 2 digit, misal 01, 02)
         String newKode = String.format("MK%02d", kode);
         txtId.setText(newKode);
 
     } catch (SQLException e) {
-        System.out.println("get code SQL error: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Query Error: " + e.getMessage());
     } catch (NumberFormatException e) {
-        System.out.println("Format NIM salah");
+        System.out.println("Error konversi angka: " + e.getMessage());
     }
 }
+
 
 
     public void addData() {
@@ -520,7 +508,6 @@ public void ComboMatkul() {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

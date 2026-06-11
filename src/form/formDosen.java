@@ -327,7 +327,7 @@ getcode();
     }//GEN-LAST:event_txtnidActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-System.exit(0);     // TODO add your handling code here:
+this.dispose();;     // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void ADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDActionPerformed

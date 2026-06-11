@@ -110,7 +110,7 @@ public class FormNilai extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Caladea", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("FORM MAHASISWA");
+        jLabel1.setText("FORM NILAI");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
@@ -236,10 +236,7 @@ public class FormNilai extends javax.swing.JDialog {
                     .addComponent(jLabel4)
                     .addComponent(jLabel6))
                 .addGap(52, 52, 52)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -266,7 +263,11 @@ public class FormNilai extends javax.swing.JDialog {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtUts, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtMutu, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(39, 39, 39)
@@ -374,7 +375,7 @@ public class FormNilai extends javax.swing.JDialog {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-System.exit(0);     // TODO add your handling code here:
+this.dispose();     // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void ADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDActionPerformed
@@ -537,7 +538,7 @@ setEnabled(false);        // TODO add your handling code here:
      
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(null, "Add data sukses : ");
+            JOptionPane.showMessageDialog(null, "Add data sukses ");
             tampilKeTabel(); 
             tampilData(); 
         }

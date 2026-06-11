@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="500" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f66228d-87c7-49dd-9d9c-616ae9df722d">
+	<property name="ireport.zoom" value="1.210000000000005"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nim" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT n.nim, mhs.nama_mhs, mk.kdMatkul, mk.namaMatkul, mk.sks, b.nilaiMutu AS NTM, b.bobot AS bobot, (mk.sks * b.bobot) AS Mutu FROM nilai n JOIN mahasiswa mhs ON n.nim = mhs.nim JOIN dosen_mengajar dm ON n.id_mengajar = dm.id_mengajar JOIN matakuliah mk ON dm.kdMatkul = mk.kdMatkul JOIN bobot b ON n.nilaiMutu = b.nilaiMutu WHERE n.nim = $P{nim} ORDER BY mk.kdMatkul ASC;]]>
+	</queryString>
+	<field name="nim" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_mhs" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kdMatkul" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="namaMatkul" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sks" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NTM" class="java.lang.String"/>
+	<field name="bobot" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Mutu" class="java.lang.Long"/>
+	<variable name="v_total_sks" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{sks}]]></variableExpression>
+	</variable>
+	<variable name="v_total_mutu" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Mutu}]]></variableExpression>
+	</variable>
+	<variable name="v_ipk" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{v_total_sks} == 0 ? 0.0 : ($V{v_total_mutu} / (double)$V{v_total_sks})]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="128">
+			<frame>
+				<reportElement uuid="8920b9ed-1dac-48eb-a1ce-0f19279cb105" mode="Opaque" x="-20" y="-30" width="595" height="158" backcolor="#006699"/>
+				<staticText>
+					<reportElement uuid="bf245977-18df-47de-be6c-de74cd4a512c" x="20" y="20" width="234" height="43" forecolor="#FFFFFF"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Laporan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="584088a6-8dc1-4977-bd66-c6ad0d55c91c" x="395" y="43" width="180" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Laporan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="160747aa-dbc9-4109-9136-1beb673f90a7" mode="Opaque" x="39" y="85" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+					<textElement textAlignment="Center">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nim]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="64189021-26ae-4c3e-b519-fc48dbb88504" x="120" y="85" width="69" height="20"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nim}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="4cca889c-d03e-40c4-a5da-4d387034dd32" mode="Opaque" x="39" y="118" width="150" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+					<textElement textAlignment="Center">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nama Mahasiswa]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="8acbe590-7c3b-4a8f-8238-a208ec0769fa" x="208" y="118" width="69" height="20"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nama_mhs}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="6"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<staticText>
+				<reportElement uuid="dfee96ea-53a9-46c3-858f-d2d581dfe858" mode="Opaque" x="0" y="0" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[kdMatkul]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="da26f43b-b835-4295-932c-049a85a74b1d" mode="Opaque" x="92" y="1" width="96" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[namaMatkul]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c912f0a2-f8ed-4d4a-89b4-b18ff7c06974" mode="Opaque" x="207" y="1" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[sks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f1dae5d8-754b-4d6a-86f4-33b6b93be99b" mode="Opaque" x="306" y="1" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NTM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="88a4f22c-98cd-4e6b-b79f-425663378968" mode="Opaque" x="393" y="1" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[bobot]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9f70c841-b18f-4f81-a61e-e55d774669d8" mode="Opaque" x="483" y="0" width="69" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mutu]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d6a2d849-8279-419c-8bef-d1438ec81ab5" x="100" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{namaMatkul}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="9ffb64c1-ca67-42e9-947d-1e5a6b86a902" x="207" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sks}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="4b763552-106c-455b-ae1c-5f494ee9c8c7" x="306" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NTM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="54c14edc-c5af-4266-a4b0-141e33f6f42d" x="393" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bobot}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8a6c04eb-54d5-43c9-ad98-303aa1d6f624" x="483" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Mutu}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="859650cb-7eb4-41fe-9523-1e85138fc39b" x="0" y="0" width="69" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kdMatkul}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="105">
+			<staticText>
+				<reportElement uuid="f1dae5d8-754b-4d6a-86f4-33b6b93be99b" mode="Opaque" x="188" y="0" width="113" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Sks]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement uuid="194926eb-62cc-46ee-9041-7c3fa81cc713" x="318" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_total_sks}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="094b92c1-6675-40de-b112-28eb2abb3431" x="318" y="45" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_total_mutu}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ef24aa42-ab2f-4b4e-b53f-f9c90f405641" x="318" y="83" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_ipk}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f1dae5d8-754b-4d6a-86f4-33b6b93be99b" mode="Opaque" x="188" y="45" width="113" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Mutu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f1dae5d8-754b-4d6a-86f4-33b6b93be99b" mode="Opaque" x="188" y="83" width="113" height="20" forecolor="#006699" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ipk]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="23">
+			<textField>
+				<reportElement uuid="3b09bf41-9a8a-4af8-9329-795d9ff667a4" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="737a4b43-8e93-4673-8253-824a5f804647" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="91e46675-9fd3-419d-8381-8ffaa5d980cd" x="0" y="4" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
